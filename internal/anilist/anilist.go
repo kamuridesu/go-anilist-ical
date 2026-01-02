@@ -2,6 +2,7 @@ package anilist
 
 import (
 	"context"
+	"fmt"
 	"time"
 )
 
@@ -17,7 +18,7 @@ type AnimeSchedule struct {
 func GetUserCurrentAnimeSchedule(ctx context.Context, username string, includePlanning bool) (*[]AnimeSchedule, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*15)
 	defer cancel()
-	user, err := GetUserFromName(ctx, "kamuridesu")
+	user, err := GetUserFromName(ctx, username)
 	if err != nil {
 		return nil, err
 	}
@@ -25,6 +26,10 @@ func GetUserCurrentAnimeSchedule(ctx context.Context, username string, includePl
 	mediaList, err := GetUserMediaList(ctx, user, includePlanning)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(*mediaList) == 0 {
+		return nil, fmt.Errorf("no results found")
 	}
 
 	var anime []AnimeSchedule
