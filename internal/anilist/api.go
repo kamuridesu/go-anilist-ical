@@ -17,36 +17,9 @@ func GetUserFromName(ctx context.Context, name string) (*User, error) {
 		},
 	}
 
-	jsonBody, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://graphql.anilist.co", bytes.NewBuffer(jsonBody))
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	resBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("error querying: status is %d and body is %s", res.StatusCode, string(resBody))
-	}
-
 	var userData UserInfoResponse
-	if err := json.Unmarshal(resBody, &userData); err != nil {
+	err := sendRequest(ctx, payload, &userData)
+	if err != nil {
 		return nil, err
 	}
 
@@ -67,14 +40,24 @@ func GetUserMediaList(ctx context.Context, user *User, includePlanning bool) (*[
 		},
 	}
 
-	jsonBody, err := json.Marshal(payload)
+	var mediaData MediaListResponse
+	err := sendRequest(ctx, payload, &mediaData)
 	if err != nil {
 		return nil, err
 	}
 
+	return &mediaData.Data.MediaListCollection.Lists[0].Entries, nil
+}
+
+func sendRequest[T any](ctx context.Context, payload map[string]any, ds *T) error {
+	jsonBody, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
 	req, err := http.NewRequestWithContext(ctx, "POST", "https://graphql.anilist.co", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -82,23 +65,21 @@ func GetUserMediaList(ctx context.Context, user *User, includePlanning bool) (*[
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("error querying: status is %d and body is %s", res.StatusCode, string(resBody))
+		return fmt.Errorf("error querying: status is %d and body is %s", res.StatusCode, string(resBody))
 	}
 
-	var mediaData MediaListResponse
-	if err := json.Unmarshal(resBody, &mediaData); err != nil {
-		return nil, err
+	if err := json.Unmarshal(resBody, ds); err != nil {
+		return err
 	}
-
-	return &mediaData.Data.MediaListCollection.Lists[0].Entries, nil
+	return nil
 }
