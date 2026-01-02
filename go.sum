@@ -1,4 +1,2 @@
-github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
-github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/kamuridesu/gomechan v0.0.0-20241126132032-9596c73b12bd h1:CHcVKy2+eyBaAIwfXhnLMc//UQw53wTiwBLQ5ZsC7qY=
 github.com/kamuridesu/gomechan v0.0.0-20241126132032-9596c73b12bd/go.mod h1:GOBd108vUYvr6LzN/yD9Ga4W0OBT6Uw50nstFEd1uUQ=

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 const (
@@ -59,7 +57,7 @@ func (vc *VCalendar) addEvent(e *VEvent) {
 
 func (vc *VCalendar) AddEvent(start, end time.Time, summary, description string) {
 	ev := VEvent{
-		uid:          uuid.NewString(),
+		uid:          fmt.Sprintf("alist@-%d-%s", start.Unix(), summary),
 		dtStart:      start.UTC().Format("20060102T150405Z"),
 		dtEnd:        end.UTC().Format("20060102T150405Z"),
 		dtStamp:      time.Now().UTC().Format("20060102T150405Z"),
