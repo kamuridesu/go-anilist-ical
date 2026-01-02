@@ -6,4 +6,4 @@ Generate ICalendar files for your Anilist current and planning lists
 
 Compile and run the program. It'll start to listen on http://localhost:8080, then just send a request like: http://localhost:8080/username.ics.
 
-If you want to also get the planning schedule, just add `?iinclude_planning=true` to the end of your request.
+If you want to also get the planning schedule, just add `?include_planning=true` to the end of your request.
