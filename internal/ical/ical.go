@@ -20,9 +20,11 @@ END:VEVENT
 `
 
 	CalendarStencil = `BEGIN:VCALENDAR
-PRODID:Kamu-anilist-scheduler
+PRODID:%s
 VERSION:%s
 CALSCALE:%s
+X-PUBLISHED-TTL:PT1H
+METHOD:PUBLISH
 %s
 END:VCALENDAR`
 )
@@ -30,6 +32,7 @@ END:VCALENDAR`
 type VCalendar struct {
 	version  string
 	calscale string
+	prodid   string
 	events   []*VEvent
 }
 
@@ -48,6 +51,7 @@ func New() *VCalendar {
 	return &VCalendar{
 		version:  "2.0",
 		calscale: "GREGORIAN",
+		prodid:   "-//Kamuri//AniListGo//EN",
 	}
 }
 
@@ -90,6 +94,7 @@ func (vc *VCalendar) generateEvents() string {
 func (vc *VCalendar) Build() string {
 	return fmt.Sprintf(
 		CalendarStencil,
+		vc.prodid,
 		vc.version,
 		vc.calscale,
 		vc.generateEvents(),

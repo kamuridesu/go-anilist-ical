@@ -57,6 +57,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	headers := map[string]string{
 		"Content-Type":        "text/calendar; charset=utf-8",
 		"Content-Disposition": "attachment; filename=anime.ics",
+		"Cache-Control":       "public, max-age=3600",
 	}
 	rw.SetHeaders(headers).Build(http.StatusOK, ics.Build()).Send()
 
