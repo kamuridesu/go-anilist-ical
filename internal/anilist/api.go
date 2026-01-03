@@ -34,11 +34,14 @@ func GetUserMediaList(ctx context.Context, user *User, includePlanning bool) (*[
 	payload := map[string]any{
 		"query": QueryGetMediaList,
 		"variables": map[string]any{
-			"usrId":    user.Id,
-			"type":     "ANIME",
-			"statusIn": statusIn,
+			"usrId":                    user.Id,
+			"type":                     "ANIME",
+			"statusIn":                 statusIn,
+			"forceSingleCompletedList": true,
 		},
 	}
+
+	fmt.Println(payload)
 
 	var mediaData MediaListResponse
 	err := sendRequest(ctx, payload, &mediaData)
@@ -46,7 +49,13 @@ func GetUserMediaList(ctx context.Context, user *User, includePlanning bool) (*[
 		return nil, err
 	}
 
-	return &mediaData.Data.MediaListCollection.Lists[0].Entries, nil
+	var allEntries []MediaEntry
+
+	for _, list := range mediaData.Data.MediaListCollection.Lists {
+		allEntries = append(allEntries, list.Entries...)
+	}
+
+	return &allEntries, nil
 }
 
 func sendRequest[T any](ctx context.Context, payload map[string]any, ds *T) error {

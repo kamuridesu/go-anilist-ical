@@ -55,10 +55,6 @@ func New() *VCalendar {
 	}
 }
 
-func (vc *VCalendar) addEvent(e *VEvent) {
-	vc.events = append(vc.events, e)
-}
-
 func (vc *VCalendar) AddEvent(start, end time.Time, summary, description string) {
 	ev := VEvent{
 		uid:          fmt.Sprintf("alist@-%d-%s", start.Unix(), summary),
@@ -70,7 +66,7 @@ func (vc *VCalendar) AddEvent(start, end time.Time, summary, description string)
 		location:     "anilist",
 		lastModified: time.Now().UTC().Format("20060102T150405Z"),
 	}
-	vc.addEvent(&ev)
+	vc.events = append(vc.events, &ev)
 }
 
 func (vc *VCalendar) generateEvents() string {

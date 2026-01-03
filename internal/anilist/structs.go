@@ -21,10 +21,6 @@ type MediaListResponse struct {
 	} `json:"data"`
 }
 
-type MediaListCollection struct {
-	Lists []MediaList `json:"data"`
-}
-
 type MediaList struct {
 	Entries []MediaEntry `json:"entries"`
 }
