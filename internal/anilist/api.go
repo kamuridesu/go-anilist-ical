@@ -41,8 +41,6 @@ func GetUserMediaList(ctx context.Context, user *User, includePlanning bool) (*[
 		},
 	}
 
-	fmt.Println(payload)
-
 	var mediaData MediaListResponse
 	err := sendRequest(ctx, payload, &mediaData)
 	if err != nil {
